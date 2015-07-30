@@ -22,6 +22,11 @@ var passport = require('passport');
 var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 
+var monk = require('monk');
+var uri = 'mongodb://markgu:gutec1@ds047772.mongolab.com:47772/heroku_892d367w';
+var db = monk(uri);
+
+
 /**
  * Controllers (route handlers).
  */
@@ -29,6 +34,8 @@ var homeController = require('./controllers/home');
 var userController = require('./controllers/user');
 var apiController = require('./controllers/api');
 var contactController = require('./controllers/contact');
+var providerController = require('./controllers/providers');
+// var providerRoute = require('./controllers/providerRoute');
 
 /**
  * API keys and Passport configuration.
@@ -40,6 +47,14 @@ var passportConf = require('./config/passport');
  * Create Express server.
  */
 var app = express();
+
+/**
+* Connect to MongoDB through Monk
+*/
+app.use(function(req,res,next){
+    req.db = db;
+    next();
+});
 
 /**
  * Connect to MongoDB.
@@ -111,6 +126,13 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
+
+/**
+* Provider app routes.
+*/
+app.get('/userlist', providerController.getUserList);
+app.post('/addUser', providerController.addUser);
+app.post('/deleteuser', providerController.deleteuser);
 
 /**
  * API examples routes.
