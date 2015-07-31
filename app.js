@@ -23,7 +23,7 @@ var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 
 var monk = require('monk');
-var uri = 'mongodb://markgu:gutec1@ds047772.mongolab.com:47772/heroku_892d367w';
+var uri = process.env.MONGODB;
 var db = monk(uri);
 
 
