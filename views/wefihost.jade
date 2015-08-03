@@ -1,0 +1,39 @@
+extends layout
+
+block content
+  h1 WeFi Host Dashboard
+  p.lead Add and Manage Your WeFi routers.
+  hr
+  .row
+    .col-sm-6
+      // PROVIDER LIST
+      h2 Your Shared WeFi Hotspots
+      #providerList
+          table.table
+              thead
+                  th WiFi
+                  th WiFi Password
+                  th Message
+                  th Location
+                  th Delete?
+              tbody
+
+    h2 Add WeFi
+    #addProvider
+        fieldset
+            input#csrf(type='hidden', name='_csrf', value=_csrf)
+            input#inputProviderName(type='text', placeholder='Username')
+            input#inputProviderWiFiname(type='text', placeholder='WiFi name')
+            br
+            input#inputProviderWiFipassword(type='text', placeholder='Password')
+            input#inputProviderMessage(type = 'text', placeholder='Message')
+            br
+            input#inputProviderLocation(type= 'text', placeholder='Location')
+            br
+            button#btnAddProvider Add Shared WeFi
+
+    #deleteForm
+        fieldset
+            input#csrf(type='hidden', name='_csrf', value=_csrf)
+
+
