@@ -45,7 +45,7 @@ var populateUserTableHome = function(){
 
             tableContent += '<tr>';
             tableContent += '<td>'+ data[i].wifiname + '</td>';
-            tableContent += '<td> <a href = "/login"> Login </a> </td>';
+            tableContent += '<td> <a href = "/login"> Login to get password </a> </td>';
             tableContent += '<td>' + data[i].message + '</td>';
             tableContent += '<td>' + data[i].location + '</td>';
             tableContent += '</tr>';
