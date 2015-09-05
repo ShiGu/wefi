@@ -8,6 +8,7 @@ block content
     .col-sm-6
       // PROVIDER LIST
       h2 Your Shared WeFi Hotspots
+
       #providerList
           table.table
               thead
@@ -22,7 +23,6 @@ block content
     #addProvider
         fieldset
             input#csrf(type='hidden', name='_csrf', value=_csrf)
-            input#inputProviderName(type='text', placeholder='Username')
             input#inputProviderWiFiname(type='text', placeholder='WiFi name')
             br
             input#inputProviderWiFipassword(type='text', placeholder='Password')

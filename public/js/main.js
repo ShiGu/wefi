@@ -4,8 +4,15 @@ var userListData = [];
 // DOM Ready =============================================================
 $(document).ready(function() {
 
-    // Populate the user table on initial page load
+    //Populate the table on /wefihost   
     populateTable();
+
+    //Populate the table on the home page
+    populateUserTableHome();
+
+    //Populate the table on the registeredUsers page
+    populateUserTable();
+    
     console.log('Running main.js');
 
     /* Username link click
@@ -16,38 +23,101 @@ $(document).ready(function() {
     $('#btnAddProvider').on('click', addUser);
 
      // Delete User link click
-    $('#providerList table tbody').on('click', 'td a.linkdeleteuser', deleteUser);
+    $('#providerList table tbody').on('click', 'td a.linkdeletewefi', deleteWefi);
 
 });
 
 // Functions =============================================================
 
-// Fill table with data
-var populateTable = function () {
+var populateUserTableHome = function(){
 
-    // Empty content string
+//This populates the user table on the homepage
+// Empty content string
     var tableContent = '';
 
     // jQuery AJAX call for JSON
     $.getJSON( '/userlist', function( data ) {
 
-        userListData = data;
+        // For each item in our JSON, add a table row and cells to the content string
+       // $.each(data, function(){
+        
+        for (var i=0; i< data.length; i++){
+
+            tableContent += '<tr>';
+            tableContent += '<td>'+ data[i].wifiname + '</td>';
+            tableContent += '<td> <a href = "/login"> Login </a> </td>';
+            tableContent += '<td>' + data[i].message + '</td>';
+            tableContent += '<td>' + data[i].location + '</td>';
+            tableContent += '</tr>';
+  
+        // Inject the whole content string into our existing HTML table
+        $('#userListHome table tbody').html(tableContent);
+    }});
+
+
+};
+
+var populateUserTable = function(){
+
+//This populates the user table on the homepage
+// Empty content string
+    var tableContent = '';
+
+    // jQuery AJAX call for JSON
+    $.getJSON( '/userlist', function( data ) {
 
         // For each item in our JSON, add a table row and cells to the content string
-        $.each(data, function(){
-            tableContent += '<tr>';
-            tableContent += '<td>'+ this.wifiname + '</td>';
-            tableContent += '<td>' + this.wifipassword + '</td>';
-            tableContent += '<td>' + this.message + '</td>';
-            tableContent += '<td>' + this.location + '</td>';
-            tableContent += '<td><a href="#" class="linkdeleteuser" rel="' + this._id + '">delete</a></td>';
-            tableContent += '</tr>';
-        });
+       // $.each(data, function(){
+        
+        for (var i=0; i< data.length; i++){
 
-        console.log(tableContent);
+            tableContent += '<tr>';
+            tableContent += '<td>'+ data[i].wifiname + '</td>';
+            tableContent += '<td>' + data[i].wifipassword + '</td>';
+            tableContent += '<td>' + data[i].message + '</td>';
+            tableContent += '<td>' + data[i].location + '</td>';
+            tableContent += '</tr>';
+  
         // Inject the whole content string into our existing HTML table
-        $('#providerList table tbody').html(tableContent);
-    });
+        $('#userList table tbody').html(tableContent);
+    }});
+
+
+};
+
+
+var populateTable = function(){
+
+//This populates the host's table
+
+// Empty content string
+    var tableContent = '';
+
+    // jQuery AJAX call for JSON
+    $.getJSON( '/hostUserList', function( data ) {
+
+
+        // For each item in our JSON, add a table row and cells to the content string
+       // $.each(data, function(){
+
+        for (var i = 0; i < data.length; i++){
+
+            tableContent += '<tr>';
+            tableContent += '<td>'+ data[i].wifiname + '</td>';
+            tableContent += '<td>' + data[i].wifipassword + '</td>';
+            tableContent += '<td>' + data[i].message + '</td>';
+            tableContent += '<td>' + data[i].location + '</td>';
+            tableContent += '<td> <a href="#" class = "linkdeletewefi" rel="' + data[i]._id + '"> delete </a> </td>';
+
+            tableContent += '</tr>';
+        //});
+        // Inject the whole content string into our existing HTML table
+     
+
+    };
+        console.log('tableContent: ' + tableContent);
+   $('#providerList table tbody').html(tableContent);
+});
 };
 
 // Show User Info
@@ -93,7 +163,6 @@ console.log('addUser function started');
 
         // If it is, compile all user info into one object
         var newUser = {
-            'username': $('#addProvider fieldset input#inputProviderName').val(),
             'wifiname': $('#addProvider fieldset input#inputProviderWiFiname').val(),
             'wifipassword': $('#addProvider fieldset input#inputProviderWiFipassword').val(),
             'message' : $('#addProvider fieldset input#inputProviderMessage').val(),
@@ -107,7 +176,7 @@ console.log('addUser function started');
         $.ajax({
             type: 'POST',
             data: newUser,
-            url: '/addUser',
+            url: '/modifyUser',
             dataType: 'JSON'
         }).done(function( response ) {
 
@@ -144,12 +213,12 @@ console.log('addUser function started');
 };
 
 // Delete User
-function deleteUser(event) {
+function deleteWefi(event) {
 
     event.preventDefault();
 
     // Pop up a confirmation dialog
-    var confirmation = confirm('Are you sure you want to delete this user?');
+    var confirmation = confirm('Are you sure you want to delete this Wefi?');
 
     // Check and make sure the user confirmed
     if (confirmation === true) {
@@ -163,7 +232,7 @@ function deleteUser(event) {
         $.ajax({
             type: 'POST',
             data: token,
-            url: '/deleteuser/'
+            url: '/deleteWefi/'
         }).done(function( response ) {
 
             // Check for a successful (blank) response

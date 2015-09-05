@@ -3,9 +3,25 @@
  * Home page.
  */
 exports.index = function(req, res) {
-  res.render('home', {
+if(req.isAuthenticated()){
+	res.redirect('/registeredUsers');
+
+}
+else{
+
+ res.render('home', {
     title: 'Home'
   });
+}
+ 
+};
+
+exports.registeredUsers = function(req, res){
+	ensureAuthenticated(req, res, function(){
+		res.render('registeredUsers', {
+			title: 'Registered Users'
+		});
+	});
 };
 
 exports.wefihost = function(req, res){

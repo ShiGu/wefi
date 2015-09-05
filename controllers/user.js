@@ -4,6 +4,7 @@ var crypto = require('crypto');
 var nodemailer = require('nodemailer');
 var passport = require('passport');
 var User = require('../models/User');
+var Wefi = require('../models/Wefi');
 var secrets = require('../config/secrets');
 
 /**
@@ -25,6 +26,7 @@ exports.postLogin = function(req, res, next) {
   req.assert('email', 'Email is not valid').isEmail();
   req.assert('password', 'Password cannot be blank').notEmpty();
 
+
   var errors = req.validationErrors();
 
   if (errors) {
@@ -45,6 +47,137 @@ exports.postLogin = function(req, res, next) {
     });
   })(req, res, next);
 };
+
+/**
+Post /modifyMessage
+*/
+
+/*
+exports.modifyMessage = function(req, res){
+  var message = 'Hello!';
+  console.log(req.user.email);
+  console.log(req.user.sharedWifi.message);
+  req.user.sharedWifi.message = message;
+
+  user.save(function(err) {
+      if (err) return next(err);
+      req.flash('success', { msg: 'Profile information updated.' });
+      res.redirect('/account');
+
+  res.redirect('/wefihost');
+};
+
+*/
+
+
+/* Practice adding a Wefi entry to the Wefi collection
+*/
+var addWefi = function(data) {
+
+var newWefi = new Wefi({
+
+wifiname: data.wifiname,
+wifipassword: data.wifipassword,
+message: data.message,
+location: data.location,
+userEmail: data.userEmail
+
+});
+
+newWefi.save(function (err, newWefi){
+  if (err) return console.error(err);
+});
+};
+
+
+/*
+exports.getUserList = function(req, res) {
+        res.json(req.user.sharedWifi);
+};
+
+*/
+
+
+exports.getUserList = function(req, res) {
+        Wefi.find(function(err, wefis){
+          if (err) return console.error(err);
+          res.send(wefis);
+        }
+          )
+};
+
+exports.getHostUserList = function(req, res){
+  User.findById(req.user.id, function(err, user){
+    if (err) return next(err);
+
+    var userEmail = user.email;
+    console.log("UserEmail is: " + userEmail);
+    var data = [];
+
+    Wefi.find(function(err, wefis){
+      if (err) return console.error(err);
+      var k = 0;
+      for (var i = 0; i<wefis.length; i++){
+        if(wefis[i].userEmail === userEmail){
+
+          data[k]=wefis[i];
+          k++;
+          console.log("We have a match");
+        };
+      };
+      console.log("There are " + data.length + "matches");
+      res.send(data);
+    });
+
+  });
+
+};
+
+
+exports.modifyUser = function(req, res, next) {
+  User.findById(req.user.id, function(err, user) {
+    if (err) return next(err);
+
+    user.sharedWifi.wifiname = req.body.wifiname || '';
+    user.sharedWifi.wifipassword = req.body.wifipassword || '';
+    user.sharedWifi.message = req.body.message || '';
+    user.sharedWifi.location = req.body.location || '';
+
+    user.save(function(err) {
+      if (err) return next(err);
+      req.flash('success', { msg: 'Profile information updated.' });
+      res.send({msg: ''});  
+    });
+
+    
+
+    var data = {
+      wifiname: user.sharedWifi.wifiname,
+      wifipassword: user.sharedWifi.wifipassword,
+      message: user.sharedWifi.message,
+      location: user.sharedWifi.location,
+      userEmail: user.email
+
+    };
+    console.log("User Email is: " + data.userEmail);
+    addWefi(data);
+
+
+    
+  });
+};
+
+exports.deleteWefi = function(req, res){
+    var db = req.db;
+    var collection = db.get('wefis');
+    var wefiToDelete = req.body.id;
+    collection.remove({ '_id' : wefiToDelete }, function(err) {
+        res.send((err === null) ? { msg: '' } : { msg:'error: ' + err });
+    });
+};
+
+
+
 
 /**
  * GET /logout

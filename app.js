@@ -12,6 +12,7 @@ var errorHandler = require('errorhandler');
 var lusca = require('lusca');
 var methodOverride = require('method-override');
 var multer  = require('multer');
+var sessions = require('client-sessions');
 
 var _ = require('lodash');
 var MongoStore = require('connect-mongo')(session);
@@ -23,6 +24,8 @@ var expressValidator = require('express-validator');
 var connectAssets = require('connect-assets');
 
 var monk = require('monk');
+//var uri = 'mongodb://localhost/test';
+
 var uri = 'mongodb://heroku_pq4pcf3v:rimf7gl3ca85gu2tua0f6p72h8@ds039880.mongolab.com:39880/heroku_pq4pcf3v';
 var db = monk(uri);
 
@@ -127,13 +130,18 @@ app.post('/account/profile', passportConf.isAuthenticated, userController.postUp
 app.post('/account/password', passportConf.isAuthenticated, userController.postUpdatePassword);
 app.post('/account/delete', passportConf.isAuthenticated, userController.postDeleteAccount);
 app.get('/account/unlink/:provider', passportConf.isAuthenticated, userController.getOauthUnlink);
-
+app.post('/modifyUser', userController.modifyUser);
 /**
 * Provider app routes.
 */
-app.get('/userlist', providerController.getUserList);
+app.get('/userlist', userController.getUserList);
+app.get('/hostUserList', userController.getHostUserList);
+//app.get('/addWefi', userController.addWefi);
+app.get('/getUserEmail', providerController.getUserEmail);
 app.post('/addUser', providerController.addUser);
-app.post('/deleteuser', providerController.deleteuser);
+//app.post('/deleteuser', providerController.deleteuser);
+app.post('/deleteWefi', userController.deleteWefi);
+app.get('/registeredUsers', homeController.registeredUsers);
 
 /**
  * API examples routes.

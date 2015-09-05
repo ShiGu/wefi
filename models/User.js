@@ -22,6 +22,14 @@ var userSchema = new mongoose.Schema({
     picture: { type: String, default: '' }
   },
 
+  sharedWifi: {
+    wifiname: { type: String, default: ''},
+    wifipassword: { type: String, default: ''},
+    message: { type: String, default: 'default message' },
+    location: { type: String, default: ''}
+
+  },
+
   resetPasswordToken: String,
   resetPasswordExpires: Date
 });
