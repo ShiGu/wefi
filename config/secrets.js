@@ -21,7 +21,7 @@
 
 module.exports = {
 
-  db: process.env.MONGODB || 'mongodb://localhost/test',
+  db: process.env.MONGOLAB_URI || 'mongodb://localhost/test',
 
   // db: process.env.MONGODB || 'mongodb://heroku_pq4pcf3v:rimf7gl3ca85gu2tua0f6p72h8@ds039880.mongolab.com:39880/heroku_pq4pcf3v',
 

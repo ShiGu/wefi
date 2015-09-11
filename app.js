@@ -26,7 +26,7 @@ var connectAssets = require('connect-assets');
 var monk = require('monk');
 //var uri = 'mongodb://localhost/test';
 
-var uri = process.env.MONGODB || 'mongodb://localhost/test';
+var uri = process.env.MONGOLAB_URI || 'mongodb://localhost/test';
 var db = monk(uri);
 
 
