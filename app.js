@@ -26,7 +26,7 @@ var connectAssets = require('connect-assets');
 var monk = require('monk');
 //var uri = 'mongodb://localhost/test';
 
-var uri = 'mongodb://heroku_pq4pcf3v:rimf7gl3ca85gu2tua0f6p72h8@ds039880.mongolab.com:39880/heroku_pq4pcf3v';
+var uri = process.env.MONGODB || 'mongodb://localhost/test';
 var db = monk(uri);
 
 
